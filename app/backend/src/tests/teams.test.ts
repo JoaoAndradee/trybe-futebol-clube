@@ -21,7 +21,6 @@ describe('Teste da rota teams', () => {
   });
 
   afterEach(() => {
-    console.log('executando aki')
     // (TeamModel.findOne as sinon.SinonStub).restore();
     sinon.restore();
   })

@@ -1,4 +1,6 @@
 import * as express from 'express';
+import teamRouters from './routers/team.router';
+import userRouters from './routers/login.router';
 
 class App {
   public app: express.Express;
@@ -22,9 +24,11 @@ class App {
 
     this.app.use(express.json());
     this.app.use(accessControl);
+    this.app.use('/teams', teamRouters);
+    this.app.use('/login', userRouters);
   }
 
-  public start(PORT: string | number): void {
+  public start(PORT: string | number):void {
     this.app.listen(PORT, () => console.log(`Running on port ${PORT}`));
   }
 }

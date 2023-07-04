@@ -1,4 +1,5 @@
 import * as jwt from 'jsonwebtoken';
+// import User from '../Interfaces/User';
 import TokenPayload from '../Interfaces/TokenPayload';
 
 const secret = process.env.JWT_SECRET || 'jwt_secret';

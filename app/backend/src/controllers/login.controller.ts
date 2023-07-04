@@ -12,4 +12,9 @@ export default class TeamController {
 
     return res.status(200).json({ token: message });
   }
+
+  static async findRole(_req: Request, res:Response) {
+    const { role } = res.locals.user;
+    return res.status(200).json({ role });
+  }
 }

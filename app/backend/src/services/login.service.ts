@@ -19,7 +19,7 @@ export default class LoginService {
     const validPassword = compareSync(password, userFields.password);
 
     if (!validPassword) return { type: 'invalidFields', message: 'Invalid email or password' };
-    const token = generateToken({ email });
+    const token = generateToken({ email, role: userFields.role });
 
     return { type: null, message: token };
   }

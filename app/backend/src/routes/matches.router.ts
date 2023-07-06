@@ -1,11 +1,24 @@
 import { Router } from 'express';
 import MatchesController from '../controllers/matches.controller';
+import validateToken from '../middlewares/tokenValidation';
 
-const teamsRouter = Router();
+const matchRouter = Router();
 
-teamsRouter.get(
+matchRouter.get(
   '/',
   MatchesController.getMatches,
 );
 
-export default teamsRouter;
+matchRouter.patch(
+  '/:id/finish',
+  validateToken,
+  MatchesController.finishMatch,
+);
+
+matchRouter.patch(
+  '/:id',
+  validateToken,
+  MatchesController.updateMatch,
+);
+
+export default matchRouter;

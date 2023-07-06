@@ -16,4 +16,18 @@ export default class TeamController {
     const allMatches = await MatchService.getMatches();
     return res.status(200).json(allMatches);
   }
+
+  static async finishMatch(req: Request, res: Response) {
+    const { id } = req.params;
+    console.log('id: ', id);
+    await MatchService.finishMatch(Number(id));
+    return res.status(200).json({ message: 'Finished' });
+  }
+
+  static async updateMatch(req: Request, res: Response) {
+    const { id } = req.params;
+    const { homeTeamGoals, awayTeamGoals } = req.body;
+    await MatchService.updateMatch(Number(id), homeTeamGoals, awayTeamGoals);
+    return res.status(200).json({ message: 'Mensagem qualquer' });
+  }
 }

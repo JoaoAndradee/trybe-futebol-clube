@@ -48,4 +48,20 @@ export default class MatchService {
       { where: { id } },
     );
   }
+
+  static async insertMatch(
+    homeTeamId: number,
+    awayTeamId: number,
+    homeTeamGoals: number,
+    awayTeamGoals: number,
+  ) {
+    const insertedMatch = await MatchesModel.create({
+      homeTeamId,
+      awayTeamId,
+      homeTeamGoals,
+      awayTeamGoals,
+      inProgress: true,
+    });
+    return insertedMatch;
+  }
 }

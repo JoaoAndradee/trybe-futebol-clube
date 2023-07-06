@@ -30,4 +30,11 @@ export default class TeamController {
     await MatchService.updateMatch(Number(id), homeTeamGoals, awayTeamGoals);
     return res.status(200).json({ message: 'Mensagem qualquer' });
   }
+
+  static async insertMatch(req: Request, res: Response) {
+    const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = req.body;
+    const response = await MatchService
+      .insertMatch(homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals);
+    return res.status(201).json(response);
+  }
 }

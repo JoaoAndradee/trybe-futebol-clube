@@ -21,4 +21,10 @@ matchRouter.patch(
   MatchesController.updateMatch,
 );
 
+matchRouter.post(
+  '/',
+  validateToken,
+  MatchesController.insertMatch,
+);
+
 export default matchRouter;

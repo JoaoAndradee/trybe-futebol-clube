@@ -33,8 +33,17 @@ export default class TeamController {
 
   static async insertMatch(req: Request, res: Response) {
     const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = req.body;
-    const response = await MatchService
-      .insertMatch(homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals);
-    return res.status(201).json(response);
+    if (homeTeamId === awayTeamId) {
+      const message = 'It is not possible to create a match with two equal teams';
+      return res.status(422).json({ message });
+    }
+    try {
+      const response = await MatchService
+        .insertMatch(homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals);
+      return res.status(201).json(response);
+    } catch (err) {
+      const message = 'There is no team with such id!';
+      return res.status(404).json({ message });
+    }
   }
 }

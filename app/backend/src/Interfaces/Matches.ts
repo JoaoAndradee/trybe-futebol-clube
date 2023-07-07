@@ -1,4 +1,4 @@
-interface Login {
+interface Match {
   id: number,
   homeTeamId: number;
   homeTeamGoals: number;
@@ -7,4 +7,4 @@ interface Login {
   inProgress: boolean;
 }
 
-export default Login;
+export default Match;

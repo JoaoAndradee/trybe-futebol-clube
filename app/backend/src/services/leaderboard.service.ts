@@ -23,6 +23,24 @@ export default class Leaderboard {
     return { totalVictories, totalLosses, totalDraws };
   }
 
+  static MatchesResultsAway(matches: IMatch[] | undefined) {
+    let totalVictories = 0;
+    let totalLosses = 0;
+    let totalDraws = 0;
+
+    matches?.forEach((match) => {
+      if (match.awayTeamGoals > match.homeTeamGoals) {
+        totalVictories += 1;
+      } else if (match.awayTeamGoals < match.homeTeamGoals) {
+        totalLosses += 1;
+      } else {
+        totalDraws += 1;
+      }
+    });
+
+    return { totalVictories, totalLosses, totalDraws };
+  }
+
   static matchesPlayedHome(id: number, finishedMatches: IMatch[] | null): IMatch[] | undefined {
     const matches = finishedMatches?.filter((e) => e.homeTeamId === id);
     return matches;
@@ -40,6 +58,17 @@ export default class Leaderboard {
     matches?.forEach((item) => {
       goalsFavor += item.homeTeamGoals;
       goalsOwn += item.awayTeamGoals;
+    });
+    return { goalsFavor, goalsOwn };
+  }
+
+  static calculateGoalsAway(matches: IMatch[] | undefined) {
+    let goalsFavor = 0;
+    let goalsOwn = 0;
+
+    matches?.forEach((item) => {
+      goalsFavor += item.awayTeamGoals;
+      goalsOwn += item.homeTeamGoals;
     });
     return { goalsFavor, goalsOwn };
   }
@@ -92,9 +121,9 @@ export default class Leaderboard {
   static getAway(teams: ITeam[] | null, finishedMatches: IMatch[]) {
     return teams?.map((t) => {
       const matches = this.matchesPlayedAway(t.id, finishedMatches);
-      const matchResult = this.MatchesResults(matches);
+      const matchResult = this.MatchesResultsAway(matches);
       const { totalVictories, totalDraws, totalLosses } = matchResult;
-      const { goalsFavor, goalsOwn } = this.calculateGoals(matches);
+      const { goalsFavor, goalsOwn } = this.calculateGoalsAway(matches);
       return {
         name: t.teamName,
         totalPoints: (totalVictories * 3) + (totalDraws * 1),

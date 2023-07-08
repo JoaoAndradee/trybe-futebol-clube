@@ -11,4 +11,9 @@ export default class LeaderboardController {
     const teamsAway = await LeaderboardService.getAwayClassification();
     return res.status(200).json(teamsAway);
   }
+
+  static async getAllClassification(_req: Request, res: Response) {
+    const teams = await LeaderboardService.getAllClassification();
+    return res.status(200).json(teams);
+  }
 }

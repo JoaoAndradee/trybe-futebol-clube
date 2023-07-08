@@ -166,4 +166,38 @@ export default class Leaderboard {
     }
     return sortedClassification;
   }
+
+  static combineClassifications(home: ILeaderboard[], away: ILeaderboard[]) {
+    const combinedClassification = [...home];
+
+    away.forEach((awayTeam) => {
+      const eTeam = combinedClassification.find((team) => team.name === awayTeam.name);
+
+      if (eTeam && eTeam.totalGames && awayTeam.totalGames) {
+        eTeam.totalPoints += awayTeam.totalPoints;
+        eTeam.totalGames += awayTeam.totalGames;
+        eTeam.totalVictories += awayTeam.totalVictories;
+        eTeam.totalDraws += awayTeam.totalDraws;
+        eTeam.totalLosses += awayTeam.totalLosses;
+        eTeam.goalsFavor += awayTeam.goalsFavor;
+        eTeam.goalsOwn += awayTeam.goalsOwn;
+        eTeam.goalsBalance += awayTeam.goalsBalance;
+        eTeam.efficiency = ((eTeam.totalPoints / (eTeam.totalGames * 3)) * 100).toFixed(2);
+      } else {
+        combinedClassification.push(awayTeam);
+      }
+    });
+
+    return combinedClassification;
+  }
+
+  static async getAllClassification() {
+    const home = await this.getHomeClassification();
+    const away = await this.getAwayClassification();
+    if (home && away) {
+      const combinedClassification = this.combineClassifications(home, away);
+      const sortedClassification = this.sortClassification(combinedClassification);
+      return sortedClassification;
+    }
+  }
 }

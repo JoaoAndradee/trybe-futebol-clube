@@ -23,8 +23,13 @@ export default class Leaderboard {
     return { totalVictories, totalLosses, totalDraws };
   }
 
-  static matchesPlayed(id: number, finishedMatches: IMatch[] | null): IMatch[] | undefined {
+  static matchesPlayedHome(id: number, finishedMatches: IMatch[] | null): IMatch[] | undefined {
     const matches = finishedMatches?.filter((e) => e.homeTeamId === id);
+    return matches;
+  }
+
+  static matchesPlayedAway(id: number, finishedMatches: IMatch[] | null): IMatch[] | undefined {
+    const matches = finishedMatches?.filter((e) => e.awayTeamId === id);
     return matches;
   }
 
@@ -65,7 +70,28 @@ export default class Leaderboard {
 
   static getHome(teams: ITeam[] | null, finishedMatches: IMatch[]) {
     return teams?.map((t) => {
-      const matches = this.matchesPlayed(t.id, finishedMatches);
+      const matches = this.matchesPlayedHome(t.id, finishedMatches);
+      const matchResult = this.MatchesResults(matches);
+      const { totalVictories, totalDraws, totalLosses } = matchResult;
+      const { goalsFavor, goalsOwn } = this.calculateGoals(matches);
+      return {
+        name: t.teamName,
+        totalPoints: (totalVictories * 3) + (totalDraws * 1),
+        totalGames: matches?.length,
+        totalVictories,
+        totalDraws,
+        totalLosses,
+        goalsFavor,
+        goalsOwn,
+        goalsBalance: goalsFavor - goalsOwn,
+        efficiency: this.calculateEfficiency(totalVictories, totalDraws, matches?.length),
+      };
+    });
+  }
+
+  static getAway(teams: ITeam[] | null, finishedMatches: IMatch[]) {
+    return teams?.map((t) => {
+      const matches = this.matchesPlayedAway(t.id, finishedMatches);
       const matchResult = this.MatchesResults(matches);
       const { totalVictories, totalDraws, totalLosses } = matchResult;
       const { goalsFavor, goalsOwn } = this.calculateGoals(matches);
@@ -91,6 +117,20 @@ export default class Leaderboard {
     let sortedClassification;
     if (finishedMatches !== null) {
       classification = this.getHome(teams, finishedMatches);
+    }
+    if (classification !== undefined) {
+      sortedClassification = this.sortClassification(classification);
+    }
+    return sortedClassification;
+  }
+
+  static async getAwayClassification() {
+    const teams = await TeamService.getAll();
+    const finishedMatches = await MatchService.getFinishedMatches();
+    let classification;
+    let sortedClassification;
+    if (finishedMatches !== null) {
+      classification = this.getAway(teams, finishedMatches);
     }
     if (classification !== undefined) {
       sortedClassification = this.sortClassification(classification);

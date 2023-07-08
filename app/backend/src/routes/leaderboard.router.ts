@@ -8,4 +8,9 @@ router.get(
   leaderboardController.getHomeClassification,
 );
 
+router.get(
+  '/away',
+  leaderboardController.getAwayClassification,
+);
+
 export default router;

@@ -6,4 +6,9 @@ export default class LeaderboardController {
     const teamsHome = await LeaderboardService.getHomeClassification();
     return res.status(200).json(teamsHome);
   }
+
+  static async getAwayClassification(_req: Request, res: Response) {
+    const teamsAway = await LeaderboardService.getAwayClassification();
+    return res.status(200).json(teamsAway);
+  }
 }
